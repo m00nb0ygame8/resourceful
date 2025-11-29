@@ -21,7 +21,6 @@ public sealed interface DataSource permits DataSource.TextSource, DataSource.Bin
 
     }
 
-    @SuppressWarnings("ClassCanBeRecord")
     final class FileSource implements DataSource {
         private final URI uri;
 

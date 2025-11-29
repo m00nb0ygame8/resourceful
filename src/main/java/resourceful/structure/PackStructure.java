@@ -1,8 +1,89 @@
 package resourceful.structure;
 
+import resourceful.data.DataSource;
+import resourceful.data.DirectoryData;
+import resourceful.data.FileData;
+
 public class PackStructure {
+    protected final DirectoryData namespace;
+    protected DirectoryData atlases, equipment, font, items, lang,
+            models, shaders, includeShaders, sounds, textures;
 
+    protected FileData regionalComplianciesJson, soundsJson;
 
+    public PackStructure(DirectoryData assets, String namespace) {
+        this.namespace = new DirectoryData(namespace, assets);
+        this.atlases = new DirectoryData("atlases", this.namespace);
+        this.equipment = new DirectoryData("equipment", this.namespace);
+        this.font = new DirectoryData("font", this.namespace);
+        this.items = new DirectoryData("items", this.namespace);
+        this.lang = new DirectoryData("lang", this.namespace);
+        this.models = new DirectoryData("models", this.namespace);
+        this.shaders = new DirectoryData("shaders", this.namespace);
+        this.includeShaders = new DirectoryData("include", this.shaders);
+        this.sounds = new DirectoryData("sounds", this.namespace);
+        this.textures = new DirectoryData("textures", this.namespace);
+
+        this.regionalComplianciesJson = FileData.createText(
+                "regional_compliancies",
+                FileData.FileType.JSON,
+                this.namespace
+        );
+
+        this.soundsJson = FileData.createText(
+                "sounds",
+                FileData.FileType.JSON,
+                this.namespace
+        );
+    }
+
+    public DirectoryData getAtlases() {
+        return atlases;
+    }
+
+    public DirectoryData getEquipment() {
+        return equipment;
+    }
+
+    public DirectoryData getFont() {
+        return font;
+    }
+
+    public DirectoryData getItems() {
+        return items;
+    }
+
+    public DirectoryData getLang() {
+        return lang;
+    }
+
+    public DirectoryData getModels() {
+        return models;
+    }
+
+    public DirectoryData getShaders() {
+        return shaders;
+    }
+
+    public DirectoryData getIncludeShaders() {
+        return includeShaders;
+    }
+
+    public DirectoryData getSounds() {
+        return sounds;
+    }
+
+    public DirectoryData getTextures() {
+        return textures;
+    }
+
+    public FileData getRegionalComplianciesJson() {
+        return regionalComplianciesJson;
+    }
+
+    public FileData getSoundsJson() {
+        return soundsJson;
+    }
 }
 
 
@@ -27,7 +108,7 @@ atlases: (Both)
     shulker_boxes.json
     signs.json
 
-blocktates: (MC ONLY)
+blockstates: (MC ONLY)
 
     block_name.json
 
@@ -242,7 +323,7 @@ textures: (Both)
 
 
 gpu_warnlist.json (MC Only)
-regional_compliance.json (Both)
+regional_compliancies.json (Both)
 sounds.json (Both)
 
  */

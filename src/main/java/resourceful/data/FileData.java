@@ -28,6 +28,18 @@ public record FileData(String fileName, FileType type, DirectoryData parent, Dat
         }
     }
 
+    public static FileSourceType getValidType(FileType type) {
+        switch(type) {
+            case JSON, FSH, VSH, GLSL, TXT, MCMETA -> {
+                return FileSourceType.TEXT;
+            }
+            case PNG, OGG, ZIP -> {
+                return FileSourceType.BINARY;
+            }
+        }
+        throw new IllegalArgumentException("Unsupported file type: " + type);
+    }
+
     public static FileData createText(String fileName, FileType type, DirectoryData parent) {
         return new FileData(fileName, type, parent, new DataSource.TextSource());
     }
