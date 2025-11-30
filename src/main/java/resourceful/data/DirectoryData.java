@@ -1,6 +1,7 @@
 package resourceful.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DirectoryData implements EntryData {
@@ -17,6 +18,7 @@ public class DirectoryData implements EntryData {
         this.name = name;
         this.parent = parent;
         this.children = new ArrayList<>();
+        if(parent != null) this.parent.addChild(this);
     }
 
     public String getName() {
@@ -38,6 +40,27 @@ public class DirectoryData implements EntryData {
 
     public List<FileData> getFiles() {
         return this.children.stream().filter(FileData.class::isInstance).map(FileData.class::cast).toList();
+    }
+
+    public List<DirectoryData> getParents() {
+        List<DirectoryData> parents = new ArrayList<>();
+        DirectoryData cur = this.parent;
+        while(cur != null) {
+            parents.add(cur);
+            cur = cur.getParent();
+        }
+        return parents;
+    }
+
+    public String toNamespaceRelativePath(DirectoryData namespace) {
+        DirectoryData cur = this;
+        List<String> parts = new ArrayList<>();
+        while (cur != null && cur != namespace.getParent()) {
+            parts.add(cur.getName());
+            cur = cur.getParent();
+        }
+        Collections.reverse(parts);
+        return String.join("/", parts);
     }
 
     public String toPath() {

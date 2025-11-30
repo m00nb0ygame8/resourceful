@@ -1,8 +1,14 @@
 package resourceful.structure;
 
+import org.w3c.dom.Text;
 import resourceful.data.DataSource;
 import resourceful.data.DirectoryData;
+import resourceful.data.EntryData;
 import resourceful.data.FileData;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class PackStructure {
     protected final DirectoryData namespace;
@@ -10,6 +16,8 @@ public class PackStructure {
             models, shaders, includeShaders, sounds, textures;
 
     protected FileData regionalComplianciesJson, soundsJson;
+
+    protected final List<FileData> extras = new ArrayList<>();
 
     public PackStructure(DirectoryData assets, String namespace) {
         this.namespace = new DirectoryData(namespace, assets);
@@ -36,6 +44,7 @@ public class PackStructure {
                 this.namespace
         );
     }
+
 
     public DirectoryData getAtlases() {
         return atlases;
@@ -83,6 +92,28 @@ public class PackStructure {
 
     public FileData getSoundsJson() {
         return soundsJson;
+    }
+
+    public List<DirectoryData> getUsedDirectories() {
+        HashSet<DirectoryData> req = new HashSet<>();
+        this.extras.forEach(fd -> {
+            DirectoryData parent = fd.parent();
+            if (parent != null) {
+                req.add(parent);
+                req.addAll(parent.getParents());
+            }
+        });
+        if(!((DataSource.TextSource)this.getSoundsJson().source()).getText().isEmpty()) req.add(this.getSoundsJson().parent());
+        if(!((DataSource.TextSource)this.getRegionalComplianciesJson().source()).getText().isEmpty()) req.add(this.getRegionalComplianciesJson().parent());
+        return List.copyOf(req);
+    }
+
+    public List<FileData> getExtras() {
+        return this.extras;
+    }
+
+    public void write(FileData data) {
+        this.extras.add(data);
     }
 }
 

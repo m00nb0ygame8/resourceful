@@ -3,7 +3,20 @@ package resourceful.data;
 import java.io.File;
 import java.util.List;
 
-public record FileData(String fileName, FileType type, DirectoryData parent, DataSource source) implements EntryData {
+@SuppressWarnings("ClassCanBeRecord")
+public class FileData implements EntryData {
+    private final String fileName;
+    private final FileType type;
+    private final DirectoryData parent;
+    private final DataSource source;
+
+    public FileData(String fileName, FileType type, DirectoryData parent, DataSource source) {
+        this.fileName = fileName;
+        this.type = type;
+        this.parent = parent;
+        this.source = source;
+        if(parent != null) parent.addChild(this);
+    }
 
     public FileSourceType getSourceType() {
         return source instanceof DataSource.TextSource ? FileSourceType.TEXT : (source instanceof DataSource.BinarySource ? FileSourceType.BINARY : FileSourceType.FILE);
@@ -38,6 +51,22 @@ public record FileData(String fileName, FileType type, DirectoryData parent, Dat
             }
         }
         throw new IllegalArgumentException("Unsupported file type: " + type);
+    }
+
+    public String fileName() {
+        return this.fileName;
+    }
+
+    public FileType type() {
+        return this.type;
+    }
+
+    public DirectoryData parent() {
+        return this.parent;
+    }
+
+    public DataSource source() {
+        return this.source;
     }
 
     public static FileData createText(String fileName, FileType type, DirectoryData parent) {

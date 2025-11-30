@@ -21,13 +21,5 @@ public sealed interface DataSource permits DataSource.TextSource, DataSource.Bin
 
     }
 
-    final class FileSource implements DataSource {
-        private final URI uri;
-
-        public FileSource(File file) {
-            this.uri = file.toURI();
-        }
-
-        public URI uri() { return this.uri; }
-    }
+    record FileSource(URI uri) implements DataSource { }
 }
