@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -35,6 +36,8 @@ public class ResourcePack {
     private Consumer<Boolean> result;
 
     private boolean zipOnOut = false;
+
+    private int compression = Deflater.DEFAULT_COMPRESSION;
 
 
     public ResourcePack(String namespace, String packName, int writeThreads) {
@@ -66,6 +69,10 @@ public class ResourcePack {
         return this;
     }
 
+    public ResourcePack withCompression(int compression) {
+        this.compression = compression;
+    }
+
     public ResourcePack generate() {
         this.root = new DirectoryData(this.packName, null);
         this.assets = new DirectoryData("assets", this.root);
@@ -95,18 +102,25 @@ public class ResourcePack {
         if(defaultShutdown) writer.write(dirs, files);
         else writer.write(dirs, files, false, timeout, result);
 
-        if(zipOnOut) zip();
+        if(zipOnOut) zip(compression);
     }
 
-    public void zip() {
+    public void zip(int compression) {
         Path rootPath = outDir.resolve(packName);
         Path zipPath = outDir.resolve(packName + ".zip");
+        try {
+            Files.deleteIfExists(zipPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete old zip!", e);
+        }
         try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(zipPath))) {
+            zos.setLevel(compression);
             Files.walk(rootPath)
                     .filter(path -> !Files.isDirectory(path))
                     .forEach(path -> {
                         try {
-                            ZipEntry entry = new ZipEntry(rootPath.relativize(path).toString());
+                            String entryName = rootPath.relativize(path).toString().replace("\\", "/");
+                            ZipEntry entry = new ZipEntry(entryName);
                             zos.putNextEntry(entry);
                             Files.copy(path, zos);
                             zos.closeEntry();
