@@ -71,6 +71,7 @@ public class ResourcePack {
 
     public ResourcePack withCompression(int compression) {
         this.compression = compression;
+        return this;
     }
 
     public ResourcePack generate() {
