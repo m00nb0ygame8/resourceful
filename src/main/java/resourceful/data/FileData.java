@@ -78,7 +78,7 @@ public class FileData implements EntryData {
     }
 
     public static FileData referenceFile(String fileName, FileType type, DirectoryData parent, File ref) {
-        return new FileData(fileName, type, parent, new DataSource.FileSource(ref));
+        return new FileData(fileName, type, parent, new DataSource.FileSource(ref.toURI()));
     }
 
     public enum FileSourceType {
