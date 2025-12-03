@@ -12,6 +12,8 @@ public class PackStructure {
     protected final DirectoryData namespace;
     protected DirectoryData atlases, equipment, font, items, lang,
             models, shaders, includeShaders, sounds, textures;
+    protected DirectoryData modelsItem, modelsBlock;
+    protected DirectoryData texturesItem, texturesBlock;
 
     protected FileData regionalComplianciesJson, soundsJson;
 
@@ -29,6 +31,12 @@ public class PackStructure {
         this.includeShaders = new DirectoryData("include", this.shaders);
         this.sounds = new DirectoryData("sounds", this.namespace);
         this.textures = new DirectoryData("textures", this.namespace);
+
+        this.modelsItem = new DirectoryData("item", this.models);
+        this.modelsBlock = new DirectoryData("block", this.models);
+
+        this.texturesItem = new DirectoryData("item", this.textures);
+        this.texturesBlock = new DirectoryData("block", this.textures);
 
         this.regionalComplianciesJson = FileData.createText(
                 "regional_compliancies",
@@ -66,6 +74,26 @@ public class PackStructure {
 
     public DirectoryData getModels() {
         return models;
+    }
+
+    public DirectoryData getModelsItem() {
+        return modelsItem;
+    }
+
+    public DirectoryData getModelsBlock() {
+        return modelsBlock;
+    }
+
+    public DirectoryData getTexturesItem() {
+        return texturesItem;
+    }
+
+    public DirectoryData getTexturesBlock() {
+        return texturesBlock;
+    }
+
+    public DirectoryData getNamespace() {
+        return namespace;
     }
 
     public DirectoryData getShaders() {
@@ -113,6 +141,7 @@ public class PackStructure {
     public void write(FileData data) {
         this.extras.add(data);
     }
+
 }
 
 
