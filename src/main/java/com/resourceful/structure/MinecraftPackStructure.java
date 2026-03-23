@@ -75,7 +75,7 @@ public class MinecraftPackStructure extends PackStructure {
         if(this.cache.containsKey(vFId)) return this.cache.get(vFId);
         else if (dir != this.namespace && !dir.isChildOf(this.namespace)) throw new IllegalArgumentException("Cannot request file not in vanilla resource pack");
         String path = dir.toNamespaceRelativePath(this.namespace) + "/" + file + "." + type.name().toLowerCase();
-        String imageUrl = "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/refs/heads/%s/assets/minecraft/%s"
+        String imageUrl = "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/%s/assets/minecraft/%s"
                 .formatted(ResourcefulConstants.MC_VERSION, path);
 
         try(InputStream in = URI.create(imageUrl).toURL().openStream()) {
