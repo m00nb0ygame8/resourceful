@@ -1,5 +1,6 @@
 package com.resourceful;
 
+import com.resourceful.data.DataSource;
 import com.resourceful.data.DirectoryData;
 import com.resourceful.data.FileData;
 import com.resourceful.modules.PackModule;
@@ -78,6 +79,17 @@ public class ResourcePack {
         this.root = new DirectoryData(this.packName, null);
         this.assets = new DirectoryData("assets", this.root);
         this.packMeta = FileData.createText("pack", FileData.FileType.MCMETA, this.root);
+
+        try {
+            ((DataSource.TextSource) this.packMeta.source())
+                    .writer()
+                    .write("{\"pack\": {\"pack_format\": %d,\"description\": \"%s\"}}".formatted(
+                            ResourcefulConstants.PACK_FORMAT,
+                            this.packName
+                    ));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to write pack.mcmeta information", e);
+        }
 
         this.ps = new PackStructure(this.assets, this.namespace);
         this.mps = new MinecraftPackStructure(this.assets);

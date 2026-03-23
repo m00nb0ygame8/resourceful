@@ -1,6 +1,6 @@
 package com.resourceful.structure;
 
-import com.resourceful.Constants;
+import com.resourceful.ResourcefulConstants;
 import com.resourceful.data.DataSource;
 import com.resourceful.data.DirectoryData;
 import com.resourceful.data.FileData;
@@ -73,10 +73,10 @@ public class MinecraftPackStructure extends PackStructure {
     public FileData fetchVanillaFile(DirectoryData dir, String file, FileData.FileType type) {
         VanillaFileId vFId = new VanillaFileId(dir, file, type);
         if(this.cache.containsKey(vFId)) return this.cache.get(vFId);
-        if(!dir.isChildOf(this.namespace)) throw new IllegalArgumentException("Cannot request file not in vanilla resource pack");
+        else if (dir != this.namespace && !dir.isChildOf(this.namespace)) throw new IllegalArgumentException("Cannot request file not in vanilla resource pack");
         String path = dir.toNamespaceRelativePath(this.namespace) + "/" + file + "." + type.name().toLowerCase();
         String imageUrl = "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/refs/heads/%s/assets/minecraft/%s"
-                .formatted(Constants.MC_VERSION, path);
+                .formatted(ResourcefulConstants.MC_VERSION, path);
 
         try(InputStream in = URI.create(imageUrl).toURL().openStream()) {
             byte[] bytes = in.readAllBytes();
